@@ -4,11 +4,11 @@ $errors = "Pas d'erreurs"
 $NumEtudeTmp = Select-String -Path 'C:\Program Files (x86)\CSiD\CSiD Update\paramgu.ini' -Pattern Numero 
 $NumEtude = ($NumEtudeTmp -split '=')[1]
 
-# Recuperation du dossier CSID Update
+#Recuperation du dossier CSID Update
 $csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;
 $csidArchivePath = Join-Path -Path $csidUpdatePath -ChildPath "Archives";
 
-# Recuperation du dossier inot
+#Recuperation du dossier inot
 $inotPath = $null;
 if(Test-Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\iNot.be)
 {
@@ -41,7 +41,12 @@ if  ($null -eq $inotPath) {
     $inotPath = Join-Path -Path $inotPath -ChildPath "Framework.CSID"; 
 }
 
-# Recuperation du dossier de la synchro
+#Récupération du statut de la synchro
+$svcName = "SynchroINot.exe"
+$services = Get-WmiObject win32_service | Where-Object { $_.PathName -like "*$svcName*" } 
+$State Synchro=$($svc.State)
+
+#Recuperation du dossier de la synchro
 $synchroPath = $null;
 $synchroService = Get-WmiObject win32_service | ?{$_.Name -like 'Synchronisation iNot Exchange'};
 if($null -ne $synchroService)
@@ -49,7 +54,7 @@ if($null -ne $synchroService)
     $synchroPath = $synchroService.PathName.Trim().Trim('"')
 } 
 
-
+#récupération des version de Inot, Books et synchro
 $inotversion = (Get-Item $inotPath\San\i-Not\Builds\GenApi.iNot.Client.exe).VersionInfo.ProductVersion;
 if(Test-Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\Finance\Serveur)
 {
@@ -66,4 +71,4 @@ $pendingupdate = (Get-ChildItem -path $csidArchivePath -Force -name);
 $ApplicationTmp = Select-String -Path $csidUpdatePath\paramgu.ini -Pattern Application;
 $Application = ($ApplicationTmp -split '=')[1];
 
-Write-Output "$NumEtude Inot:$inotversion Books:$booksversion Synchro:$synchroversion List:$Application Pending:$pendingupdate Error:$errors ";
+Write-Output "$NumEtude Inot: $inotversion Books: $booksversion Synchro: $synchroversion $($svc.State) List: $Application Pending:$pendingupdate Error: $errors ";

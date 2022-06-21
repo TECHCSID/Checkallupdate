@@ -44,7 +44,6 @@ if  ($null -eq $inotPath) {
 #Récupération du statut de la synchro
 $svcName = "SynchroINot.exe"
 $services = Get-WmiObject win32_service | Where-Object { $_.PathName -like "*$svcName*" } 
-$State Synchro=$($svc.State)
 
 #Recuperation du dossier de la synchro
 $synchroPath = $null;

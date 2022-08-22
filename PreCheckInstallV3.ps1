@@ -1,11 +1,11 @@
 $errors = "Pas d'erreurs"
 
-#Récupréation de la valeur
-$NumEtudeTmp = Select-String -Path 'C:\Program Files (x86)\CSiD\CSiD Update\paramgu.ini' -Pattern Numero 
+#Récupération du numéro étude
+$csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;
+$NumEtudeTmp = Select-String -Path $csidUpdatePath -Pattern Numero 
 $NumEtude = ($NumEtudeTmp -split '=')[1]
 
 #Recuperation du dossier CSID Update
-$csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;
 $csidArchivePath = Join-Path -Path $csidUpdatePath -ChildPath "Archives";
 
 #Recuperation du dossier inot

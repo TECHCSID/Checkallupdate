@@ -1,4 +1,4 @@
-$errors = "Pas d'erreur"
+$errors = "No error"
 
 #Récupréation de la valeur
 $NumEtudeTmp = Select-String -Path 'C:\Program Files (x86)\CSiD\CSiD Update\paramgu.ini' -Pattern Numero 

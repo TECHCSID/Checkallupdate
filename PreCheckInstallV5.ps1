@@ -98,4 +98,4 @@ $pendingupdate = (Get-ChildItem -path $csidArchivePath -Force -name);
 $ApplicationTmp = Select-String -Path $csidUpdatePath\paramgu.ini -Pattern Application;
 $Application = ($ApplicationTmp -split '=')[1];
 
-Write-Output "$NumEtude ;Inot: $inotversion ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending:$pendingupdate ;Error: $errors ";
+Write-Output "$NumEtude ;Inot: $inotversion ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";

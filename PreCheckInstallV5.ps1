@@ -26,7 +26,7 @@ if  ($null -eq $inotPath) {
             $inotPath = $drives[0].FullName; 
             if($drives.Count -gt 1)
             {
-                $errors = "Several disks with Framework.CSID, WARNING for install";
+                $errors = "Several disks with Framework.CSID_WARNING for install";
             }
 
             if(-Not (Test-Path -Path "$inotPath\San\i-Not\Builds\"))
@@ -43,7 +43,7 @@ if  ($null -eq $inotPath) {
                 $inotPath = $drives[0].FullName; 
                 if($drives.Count -gt 1)
                 {
-                    $errors = "Several disks with Framework.CSID, WARNING for install";
+                    $errors = "Several disks with Framework.CSID_WARNING for install";
                 }
     
                 if(-Not (Test-Path -Path "$inotPath\San\i-Not\Builds\"))

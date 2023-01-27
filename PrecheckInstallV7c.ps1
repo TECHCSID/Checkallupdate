@@ -8,6 +8,14 @@ $NumEtude = ($NumEtudeTmp -split '=')[1]
 $csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;
 $csidArchivePath = Join-Path -Path $csidUpdatePath -ChildPath "Archives";
 
+#Recupération de la version encodée dans le fichier XML
+$xmlPath = Join-Path -Path $csidUpdatePath -ChildPath "Version_Etude.xml";
+[xml]$xmlFile = Get-Content $xmlPath;
+$inotProduit = $xmlFile.ConfigEtude.Produits.Produit | Where-Object id -eq 'iNot' | Select-Object -First 1;
+$versionXML = $inotProduit.Versions.Version | Where-Object update -eq 'O' | Select-Object -First 1
+
+$versioninotGU = $versionXML.version;
+
 #Recuperation du dossier inot
 $inotPath = $null;
 if(Test-Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\iNot.be)
@@ -103,4 +111,13 @@ if($null -eq $pendingupdate)
 $ApplicationTmp = Select-String -Path $csidUpdatePath\paramgu.ini -Pattern Application;
 $Application = ($ApplicationTmp -split '=')[1];
 
-Write-Output "$NumEtude ;Inot: $inotversion ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
+
+$output = "";
+if($inotversion -eq $versioninotGU)
+{
+    $output = " $NumEtude ;Inot: OK;exe= $inotversion ;GU= $versioninotGU ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
+} else {
+    $output = " $NumEtude ;Inot: NOK;exe= $inotversion ;GU= $versioninotGU ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
+}
+
+Write-Output $output;

@@ -115,9 +115,9 @@ $Application = ($ApplicationTmp -split '=')[1];
 $output = "";
 if($inotversion -eq $versioninotGU)
 {
-    $output = " $NumEtude ;Inot: OK;exe= $inotversion ;GU= $versioninotGU ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
+    $output = " $NumEtude ;Inot: $inotversion ;OK;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
 } else {
-    $output = " $NumEtude ;Inot: NOK;exe= $inotversion ;GU= $versioninotGU ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
+    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU= $versioninotGU ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
 }
 
 Write-Output $output;

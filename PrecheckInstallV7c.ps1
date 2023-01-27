@@ -13,8 +13,11 @@ $xmlPath = Join-Path -Path $csidUpdatePath -ChildPath "Version_Etude.xml";
 [xml]$xmlFile = Get-Content $xmlPath;
 $inotProduit = $xmlFile.ConfigEtude.Produits.Produit | Where-Object id -eq 'iNot' | Select-Object -First 1;
 $versionXML = $inotProduit.Versions.Version | Where-Object update -eq 'O' | Select-Object -First 1
+$BooksProduit = $xmlFile.ConfigEtude.Produits.Produit | Where-Object id -eq 'Books' | Select-Object -First 1;
+$versionBooksXML = $BooksProduit.Versions.Version | Where-Object update -eq 'O' | Select-Object -First 1
 
 $versioninotGU = $versionXML.version;
+$versionBooksGU = $versionBooksXML.version;
 
 #Recuperation du dossier inot
 $inotPath = $null;
@@ -115,9 +118,9 @@ $Application = ($ApplicationTmp -split '=')[1];
 $output = "";
 if($inotversion -eq $versioninotGU)
 {
-    $output = " $NumEtude ;Inot: $inotversion ;OK;;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
+    $output = " $NumEtude ;Inot: $inotversion ;OK;;BooksReg: $booksversion ;BooksXml= $versionBooksGU ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
 } else {
-    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU= $versioninotGU ;Books: $booksversion ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
+    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU= $versioninotGU ;BooksReg: $booksversion ;BooksXml= $versionBooksGU ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ";
 }
 
 Write-Output $output;

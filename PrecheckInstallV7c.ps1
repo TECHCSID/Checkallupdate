@@ -1,25 +1,24 @@
 $errors = "No error"
 
-#Récupréation de la valeur
+#Récupération de la valeur
 $NumEtudeTmp = Select-String -Path 'C:\Program Files (x86)\CSiD\CSiD Update\paramgu.ini' -Pattern Numero 
 $NumEtude = ($NumEtudeTmp -split '=')[1]
 
-#Recuperation du dossier CSID Update
+#Récupération du dossier CSID Update
 $csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;
 $csidArchivePath = Join-Path -Path $csidUpdatePath -ChildPath "Archives";
 
-#Recupération de la version encodée dans le fichier XML
+#Récupération de la version inot et inotBooks encodée dans le fichier XML
 $xmlPath = Join-Path -Path $csidUpdatePath -ChildPath "Version_Etude.xml";
 [xml]$xmlFile = Get-Content $xmlPath;
 $inotProduit = $xmlFile.ConfigEtude.Produits.Produit | Where-Object id -eq 'iNot' | Select-Object -First 1;
 $versionXML = $inotProduit.Versions.Version | Where-Object update -eq 'O' | Select-Object -First 1
 $BooksProduit = $xmlFile.ConfigEtude.Produits.Produit | Where-Object id -eq 'Books' | Select-Object -First 1;
 $versionBooksXML = $BooksProduit.Versions.Version | Where-Object update -eq 'O' | Select-Object -First 1
-
 $versioninotGU = $versionXML.version;
 $versionBooksGU = $versionBooksXML.version;
 
-#Recuperation du dossier inot
+#Récupération du chemin de l'installation inot
 $inotPath = $null;
 if(Test-Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\iNot.be)
 {
@@ -70,12 +69,14 @@ if  ($null -eq $inotPath) {
 } else {
     $inotPath = Join-Path -Path $inotPath -ChildPath "Framework.CSID"; 
 }
+#Récupération du chemin de l'installation inotBooks
+$inotBooksPath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\Finance\serveur | Select-Object -ExpandProperty RepertoireInstallation;
 
 #Récupération du statut de la synchro
 $svcName = "SynchroINot.exe"
 $services = Get-WmiObject win32_service | Where-Object { $_.PathName -like "*$svcName*" } 
 
-#Recuperation du dossier de la synchro
+#Récéperation du dossier de la synchro
 $synchroPath = $null;
 $synchroService = Get-WmiObject win32_service | ?{$_.Name -like 'Synchronisation iNot Exchange'};
 if($null -ne $synchroService)
@@ -89,7 +90,7 @@ if($null -ne $synchroService)
     }
 } 
 
-#récupération des version de Inot, Books et synchro
+#récupération des versions des installations Inot, InotBooks et synchro présentes sur le serveur
 if($null -ne $inotPath) {
     $inotversion = (Get-Item $inotPath\San\i-Not\Builds\GenApi.iNot.Client.exe).VersionInfo.ProductVersion;
 } else {
@@ -97,7 +98,7 @@ if($null -ne $inotPath) {
 }
 if(Test-Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\Finance\Serveur)
 {
-    $booksversion = (Get-Itemproperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\Finance\Serveur).version;
+    $booksversion = (Get-Itemproperty $inotBooksPath\Serveur\bin\GenApi.Finance.Serveur.Common.dll).VersionInfo.fileversion;
 } else {
     $booksversion = " No Books";
 }

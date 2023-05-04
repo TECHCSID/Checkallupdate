@@ -29,7 +29,7 @@ if([string]::IsNullOrEmpty($NumEtude)){
 $nometude = (Get-Itemproperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSIDAlerts).NOMCLIENT
 
 # Récupération de la version de l'OS
-$OsVersion = (Get-WmiObject -Class Win32_OperatingSystem).Caption.Replace("Microsoft Windows ", "Win")
+$OsVersion = (Get-WmiObject -Class Win32_OperatingSystem).Caption.Replace("Microsoft Windows", "Win")
 
 # Récupération du dossier CSID Update
 $csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;

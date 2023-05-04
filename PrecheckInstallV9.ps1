@@ -154,5 +154,5 @@ if($inotversion -eq $versioninotGU)
 Write-Output $output;
 
 $scriptName = "precheckinstall"
-$scriptPath = "C:\temp"
+$scriptPath = "C:\Windows\TEMP\rgsupv"
 Get-ChildItem $scriptPath -Filter "$scriptName" -Recurse | Remove-Item -Force

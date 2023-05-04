@@ -15,12 +15,6 @@ if($freeSpace -lt $requiredSpace){
     Exit
 }
 
-# Récupération du nom de l'étude
-$nometude = (Get-Itemproperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSIDAlerts).NOMCLIENT
-
-# Récupération de la version de l'OS
-$OsVersion = (Get-WmiObject -Class Win32_OperatingSystem).Caption.Replace("Microsoft Windows ", "Win")
-
 # Récupération de la valeur ID MySepteo / ICARE
 $NumEtudeTmp = Select-String -Path 'C:\Program Files (x86)\CSiD\CSiD Update\paramgu.ini' -Pattern Numero 
 $NumEtude = ($NumEtudeTmp -split '=')[1]
@@ -30,6 +24,12 @@ if([string]::IsNullOrEmpty($NumEtude)){
     echo 'Pas un serveur de production iNot' 
     Exit
 }
+
+# Récupération du nom de l'étude
+$nometude = (Get-Itemproperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSIDAlerts).NOMCLIENT
+
+# Récupération de la version de l'OS
+$OsVersion = (Get-WmiObject -Class Win32_OperatingSystem).Caption.Replace("Microsoft Windows ", "Win")
 
 # Récupération du dossier CSID Update
 $csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;

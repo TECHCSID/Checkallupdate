@@ -152,3 +152,7 @@ if($inotversion -eq $versioninotGU)
 }
 
 Write-Output $output;
+
+$scriptName = "precheckinstall"
+$scriptPath = "C:\temp"
+Get-ChildItem $scriptPath -Filter "$scriptName" -Recurse | Remove-Item -Force

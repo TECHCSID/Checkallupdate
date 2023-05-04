@@ -150,9 +150,11 @@ if($inotversion -eq $versioninotGU)
 } else {
     $output = " $NumEtude ;Inot: $inotversion ;NOK;GU: $versioninotGU ;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion ";
 }
-
+# affichage des infos dans les remontées de RG
 Write-Output $output;
 
+# suppression du script et des anciennes versions
 $scriptName = "precheckinstall"
 $scriptPath = "C:\Windows\TEMP\rgsupv"
 Get-ChildItem $scriptPath -Filter "$scriptName" -Recurse | Remove-Item -Force
+exit

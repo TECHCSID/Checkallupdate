@@ -2,8 +2,7 @@ $errors = "No error"
 
 # Vérification de la version de PowerShell
 if($PSVersionTable.PSVersion.Major -lt 4){
-    echo 'PowerShell 4.0 ou superieur est requis pour executer ce script !' 
-    Exit
+    echo 'PowerShell 4.0 ou superieur est requis pour executer ce script !'
 }
 
 # Vérification de l'espace disque disponible sur le lecteur C:
@@ -12,7 +11,6 @@ $requiredSpace = 5GB # Espace disque minimal nécessaire pour l'installation
 
 if($freeSpace -lt $requiredSpace){
     echo "Espace disque insuffisant sur le lecteur C: $($freeSpace/1GB) Go disponibles sur $($requiredSpace/1GB) Go requis !" 
-    Exit
 }
 
 # Récupération de la valeur ID MySepteo / ICARE

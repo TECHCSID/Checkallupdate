@@ -1,10 +1,8 @@
 $errors = "No error"
 
 # Vérification de la version de PowerShell
-$PSVersionTable.PSVersion
-
 if($PSVersionTable.PSVersion.Major -lt 4){
-    echo 'PowerShell 4.0 ou supérieur est requis pour exécuter ce script !' 
+    echo 'PowerShell 4.0 ou superieur est requis pour executer ce script !' 
     Exit
 }
 
@@ -17,21 +15,21 @@ if($freeSpace -lt $requiredSpace){
     Exit
 }
 
-# Récupération du nom de l'étude
-$nometude = (Get-Itemproperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSIDAlerts).NOMCLIENT
-
-# Récupération de la version de l'OS
-$OsVersion = (Get-WmiObject -Class Win32_OperatingSystem).Caption
-
 # Récupération de la valeur ID MySepteo / ICARE
 $NumEtudeTmp = Select-String -Path 'C:\Program Files (x86)\CSiD\CSiD Update\paramgu.ini' -Pattern Numero 
 $NumEtude = ($NumEtudeTmp -split '=')[1]
 
 # Vérification de la variable $NumEtude
 if([string]::IsNullOrEmpty($NumEtude)){
-    echo 'Pas un serveur de production iNot' 
+    echo 'Pas un serveur de production iNot !' 
     Exit
 }
+
+# Récupération du nom de l'étude
+$nometude = (Get-Itemproperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSIDAlerts).NOMCLIENT
+
+# Récupération de la version de l'OS
+$OsVersion = (Get-WmiObject -Class Win32_OperatingSystem).Caption.Replace("Microsoft Windows", "Win")
 
 # Récupération du dossier CSID Update
 $csidUpdatePath = Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\CSiD\CSiDUpdate | Select-Object -ExpandProperty InstallLocation;
@@ -134,12 +132,12 @@ if(Test-Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\Finance\Serveur)
 if($null -ne $synchroPath) {
 $synchroversion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($synchroPath).FileVersion;
 } else {
-    $synchroversion = " No Synchro";
+    $synchroversion = " No Sync";
 }
 $pendingupdate = (Get-ChildItem -path $csidArchivePath -Force -name);
 if($null -eq $pendingupdate)
 {
-    $pendingupdate = " No Pending";
+    $pendingupdate = " empty";
 }
 $ApplicationTmp = Select-String -Path $csidUpdatePath\paramgu.ini -Pattern Application;
 $Application = ($ApplicationTmp -split '=')[1];
@@ -148,9 +146,15 @@ $Application = ($ApplicationTmp -split '=')[1];
 $output = "";
 if($inotversion -eq $versioninotGU)
 {
-    $output = " $NumEtude ;Inot: $inotversion ;OK;;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ; $nometude ; $OsVersion";
+    $output = " $NumEtude ;Inot: $inotversion ;OK;;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion";
 } else {
-    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU: $versioninotGU ;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Synchro: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ; $nometude ; $OsVersion ";
+    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU: $versioninotGU ;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion ";
 }
-
+# affichage des infos dans les remontées de RG
 Write-Output $output;
+
+# suppression du script et des anciennes versions
+$scriptName = "precheckinstall"
+$scriptPath = "C:\Windows\TEMP\rgsupv"
+Get-ChildItem $scriptPath -Filter "$scriptName" -Recurse | Remove-Item -Force
+exit

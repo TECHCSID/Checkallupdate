@@ -2,7 +2,7 @@ $errors = "No error"
 
 # Vérification de la version de PowerShell
 if($PSVersionTable.PSVersion.Major -lt 4){
-    echo 'PowerShell 4.0 ou supérieur est requis pour exécuter ce script !' 
+    echo 'PowerShell 4.0 ou superieur est requis pour executer ce script !' 
     Exit
 }
 
@@ -21,7 +21,7 @@ $NumEtude = ($NumEtudeTmp -split '=')[1]
 
 # Vérification de la variable $NumEtude
 if([string]::IsNullOrEmpty($NumEtude)){
-    echo 'Pas un serveur de production iNot' 
+    echo 'Pas un serveur de production iNot !' 
     Exit
 }
 
@@ -132,12 +132,12 @@ if(Test-Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\GenApi\Finance\Serveur)
 if($null -ne $synchroPath) {
 $synchroversion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($synchroPath).FileVersion;
 } else {
-    $synchroversion = " No Synchro";
+    $synchroversion = " No Sync";
 }
 $pendingupdate = (Get-ChildItem -path $csidArchivePath -Force -name);
 if($null -eq $pendingupdate)
 {
-    $pendingupdate = " No Pending";
+    $pendingupdate = " empty";
 }
 $ApplicationTmp = Select-String -Path $csidUpdatePath\paramgu.ini -Pattern Application;
 $Application = ($ApplicationTmp -split '=')[1];
@@ -146,9 +146,15 @@ $Application = ($ApplicationTmp -split '=')[1];
 $output = "";
 if($inotversion -eq $versioninotGU)
 {
-    $output = " $NumEtude ;Inot: $inotversion ;OK;;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ; $nometude ; $OsVersion";
+    $output = " $NumEtude ;Inot: $inotversion ;OK;;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion";
 } else {
-    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU: $versioninotGU ;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ;Error: $errors ; $nometude ; $OsVersion ";
+    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU: $versioninotGU ;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion ";
 }
-
+# affichage des infos dans les remontées de RG
 Write-Output $output;
+
+# suppression du script et des anciennes versions
+$scriptName = "precheckinstall"
+$scriptPath = "C:\Windows\TEMP\rgsupv"
+Get-ChildItem $scriptPath -Filter "$scriptName" -Recurse | Remove-Item -Force
+exit

@@ -144,9 +144,9 @@ $Application = ($ApplicationTmp -split '=')[1];
 $output = "";
 if($inotversion -eq $versioninotGU)
 {
-    $output = " $NumEtude ;Inot: $inotversion ;OK;;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion";
+    $output = " $NumEtude ;Inot: $inotversion ;OK;;Books: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion";
 } else {
-    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU: $versioninotGU ;BooksReg: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion ";
+    $output = " $NumEtude ;Inot: $inotversion ;NOK;GU: $versioninotGU ;Books: $booksversion ;BooksXml: $versionBooksGU ;Sync: $synchroversion $($svc.State) ;Apps in GU: $Application ;Pending: $pendingupdate ; $errors ; $nometude ; $OsVersion ";
 }
 # affichage des infos dans les remontées de RG
 Write-Output $output;
